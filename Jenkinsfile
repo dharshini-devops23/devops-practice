@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven' // Replace with your actual Maven install name
-        jdk 'JDK-11'  // Replace with your actual JDK install name
+        maven 'Maven 3.9.6'
+        jdk 'JDK 17'
     }
 
     stages {
@@ -24,7 +24,7 @@ pipeline {
                 SONARQUBE_SCANNER_PARAMS = "-Dsonar.projectKey=devops-practice -Dsonar.projectName=devops-practice"
             }
             steps {
-                withSonarQubeEnv('MySonarQube') {
+                withSonarQubeEnv('SonarScanner') {
                     sh 'mvn sonar:sonar'
                 }
             }
