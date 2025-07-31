@@ -28,7 +28,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           C:\sonar-scanner-cli-5.0.1.3006-windows\bin\sonar-scanner.bat ^
-            -Dsonar.projectKey=your_project_key ^
+            -Dsonar.projectKey=dharshini-devops ^
             -Dsonar.sources=. ^
             -Dsonar.host.url=http://localhost:9000 ^
             -Dsonar.login=%SONAR_TOKEN%
