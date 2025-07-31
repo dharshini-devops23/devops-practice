@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.6'
-        jdk 'JDK 17'
+        maven 'Maven 3.9.6'   // Exact name as per Jenkins Global Tool Config
+        jdk 'JDK 17'          // Exact name as per Jenkins Global Tool Config
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean install'
+                sh 'mvn clean install'
             }
         }
 
@@ -24,8 +24,8 @@ pipeline {
                 SONARQUBE_SCANNER_PARAMS = "-Dsonar.projectKey=devops-practice -Dsonar.projectName=devops-practice"
             }
             steps {
-                withSonarQubeEnv('SonarScanner') {
-                    bat 'mvn sonar:sonar'
+                withSonarQubeEnv('MySonarQube') {
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
