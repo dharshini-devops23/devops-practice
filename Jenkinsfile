@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.6'   // Exact name as per Jenkins Global Tool Config
-        jdk 'JDK 17'          // Exact name as per Jenkins Global Tool Config
+        sonarQubeScanner 'SonarScanner'  // 🟡 Exactly match the tool name in Jenkins config
+        jdk 'JDK 17'                     // ✅ Your configured JDK
     }
 
     stages {
@@ -13,19 +13,16 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-
         stage('SonarQube Analysis') {
-            environment {
-                SONARQUBE_SCANNER_PARAMS = "-Dsonar.projectKey=devops-practice -Dsonar.projectName=devops-practice"
-            }
             steps {
-                withSonarQubeEnv('MySonarQube') {
-                    sh 'mvn sonar:sonar'
+                withSonarQubeEnv('MySonarQube') {  // 🟢 Name should match SonarQube server name in Jenkins
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=devops-practice \
+                        -Dsonar.sources=. \
+                        -Dsonar.projectName=devops-practice \
+                        -Dsonar.host.url=http://localhost:9000
+                    '''
                 }
             }
         }
