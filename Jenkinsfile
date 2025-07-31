@@ -1,17 +1,15 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/dharshini-devops23/devops-practice.git'
-            }
-        }
+    tools {
+        maven 'Maven 3.8.8'      // Your configured Maven version name
+    }
 
+    stages {
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('MySonarQube') {
-                    sh 'sonar-scanner'
+                withSonarQubeEnv('MySonar') {
+                    sh 'mvn clean verify sonar:sonar'
                 }
             }
         }
