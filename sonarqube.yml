@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.9.6'     // Make sure this matches the Maven name in Jenkins Global Tool Config
-        jdk 'JDK 17'            // Same for JDK
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -13,15 +8,15 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('MySonarQube') {  // Name should match what you configured in "Configure System"
-                    bat """
+                withSonarQubeEnv('MySonarQube') { // ✅ Match this name with Jenkins > Global Tool Config
+                    bat '''
                         sonar-scanner ^
                         -Dsonar.projectKey=devops-practice ^
                         -Dsonar.sources=. ^
                         -Dsonar.projectName=devops-practice
-                    """
+                    '''
                 }
             }
         }
