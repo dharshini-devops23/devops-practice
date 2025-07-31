@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    tools {
+        // If you've configured Maven or JDK tools in Jenkins, add them here. Optional.
+        maven 'Maven 3.9.6'
+        jdk 'JDK 17'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,8 +21,7 @@ pipeline {
                         sonar-scanner ^
                         -Dsonar.projectKey=devops-practice ^
                         -Dsonar.sources=. ^
-                        -Dsonar.projectName=devops-practice ^
-                        -Dsonar.host.url=http://localhost:9000
+                        -Dsonar.projectName=devops-practice
                     """
                 }
             }
