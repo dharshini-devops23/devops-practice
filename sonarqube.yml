@@ -2,21 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/dharshini-devops23/devops-practice.git'
+                git url: 'https://github.com/dharshini-devops23/devops-practice.git', branch: 'main'
             }
         }
 
-        stage('SonarQube Scan') {
+        stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('MySonarQube') { // ✅ Match this name with Jenkins > Global Tool Config
-                    bat '''
-                        sonar-scanner ^
-                        -Dsonar.projectKey=devops-practice ^
-                        -Dsonar.sources=. ^
-                        -Dsonar.projectName=devops-practice
-                    '''
+                withSonarQubeEnv('MySonarQube') {
+                    bat 'sonar-scanner -Dsonar.projectKey=devops-practice -Dsonar.sources=.'
                 }
             }
         }
