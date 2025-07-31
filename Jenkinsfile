@@ -2,25 +2,23 @@ pipeline {
     agent any
 
     tools {
-        // Make sure this matches the name of SonarScanner in Jenkins > Global Tool Configuration
-        sonarScanner 'SonarScanner'
+        sonarQubeScanner 'SonarScanner'  // Use the exact name from Jenkins
     }
 
     environment {
-        // Optional: If you need to use the token explicitly
-        SONAR_TOKEN = credentials('sonar-token') 
+        SONARQUBE_ENV = 'MySonarQube'   // Use the SonarQube name from Jenkins config
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/dharshini-devops23/devops-practice.git'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('MySonarQube') {
+                withSonarQubeEnv("${env.SONARQUBE_ENV}") {
                     sh 'sonar-scanner'
                 }
             }
@@ -28,7 +26,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
+                timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
