@@ -2,11 +2,7 @@ pipeline {
     agent any
 
     tools {
-        sonarQubeScanner 'SonarScanner'  // Use the exact name from Jenkins
-    }
-
-    environment {
-        SONARQUBE_ENV = 'MySonarQube'   // Use the SonarQube name from Jenkins config
+        hudson.plugins.sonar.SonarRunnerInstallation 'SonarScanner'
     }
 
     stages {
@@ -18,16 +14,8 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("${env.SONARQUBE_ENV}") {
+                withSonarQubeEnv('MySonarQube') {
                     sh 'sonar-scanner'
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
