@@ -1,37 +1,29 @@
-name: SonarQube Scan
+pipeline {
+    agent any
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    tools {
+        sonarQubeScanner 'SonarScanner'
+    }
 
-jobs:
-  sonarqube:
-    name: SonarQube CLI Scan
-    runs-on: ubuntu-latest
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/dharshini-devops23/devops-practice.git'
+            }
+        }
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-
-      - name: Download SonarScanner CLI
-        run: |
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-          mv sonar-scanner-5.0.1.3006-linux sonar-scanner
-
-      - name: Run SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./sonar-scanner/bin/sonar-scanner \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.host.url=http://localhost:9000
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('MySonarQube') {
+                    bat """
+                        sonar-scanner ^
+                        -Dsonar.projectKey=devops-practice ^
+                        -Dsonar.sources=. ^
+                        -Dsonar.projectName=devops-practice ^
+                        -Dsonar.host.url=http://localhost:9000
+                    """
+                }
+            }
+        }
+    }
+}
