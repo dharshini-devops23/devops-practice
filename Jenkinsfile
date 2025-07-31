@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK 17'               // Exactly match the name from Global Tool Config
-        maven 'Maven_3.9.6'        // Exactly match the name from Global Tool Config
+        jdk 'JDK 17'
+        maven 'Maven 3.9.6'
     }
 
     environment {
-        SONARQUBE_ENV = 'MySonar'  // Must match your SonarQube installation name
+        SONARQUBE_ENV = 'MySonar'
     }
 
     stages {
