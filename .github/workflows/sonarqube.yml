@@ -11,7 +11,7 @@ on:
 jobs:
   sonarqube:
     name: SonarQube CLI Scan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # <- This uses your local Windows runner
 
     steps:
       - name: Checkout repository
@@ -22,16 +22,15 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Download SonarScanner CLI
+      - name: Download SonarScanner CLI (Windows)
+        shell: powershell
         run: |
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-          mv sonar-scanner-5.0.1.3006-linux sonar-scanner
+          Invoke-WebRequest -Uri "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip" -OutFile "sonar-scanner.zip"
+          Expand-Archive -Path "sonar-scanner.zip" -DestinationPath "sonar-scanner"
 
-      - name: Run SonarQube Analysis
+      - name: Run SonarQube Analysis (Windows)
+        shell: cmd
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./sonar-scanner/bin/sonar-scanner \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.host.url=http://localhost:9000
+          sonar-scanner\sonar-scanner-cli-5.0.1.3006-windows\bin\sonar-scanner.bat -Dsonar.login=%SONAR_TOKEN% -Dsonar.host.url=http://localhost:9000
