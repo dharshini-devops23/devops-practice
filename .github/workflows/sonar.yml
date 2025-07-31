@@ -19,6 +19,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run SonarQube Scanner
+      - name: Download Sonar Scanner CLI
+        shell: powershell
         run: |
-          ./sonar-scanner/bin/sonar-scanner.bat
+          Invoke-WebRequest -Uri "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip" -OutFile "sonar-scanner.zip"
+          Expand-Archive -Path "sonar-scanner.zip" -DestinationPath "."
+
+      - name: Run SonarQube Scanner
+        shell: cmd
+        run: |
+          sonar-scanner-cli-5.0.1.3006-windows\bin\sonar-scanner.bat
